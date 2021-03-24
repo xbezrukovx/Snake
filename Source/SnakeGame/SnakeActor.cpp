@@ -3,6 +3,7 @@
 
 #include "SnakeActor.h"
 #include "SnakeElementBase.h"
+#include "Interactable.h"
 // Sets default values
 ASnakeActor::ASnakeActor()
 {
@@ -32,10 +33,14 @@ void ASnakeActor::Tick(float DeltaTime)
 void ASnakeActor::AddSnakeElement(int ElementsNum){
 	for (int i = 0; i < ElementsNum; ++i) {
 		FVector NewLocation(SnakeElements.Num() * ElementSize, 0, 0);
+		//FVector NewScaleAfterSpawn(0.5, 0.5, 0.5);
 		FTransform NewTransform(NewLocation);
 		ASnakeElementBase* NewSnakeElem = GetWorld()->SpawnActor<ASnakeElementBase>(SnakeElementClass, NewTransform);
+		NewSnakeElem->SnakeOwner = this;
 		int32 ElemIndex = SnakeElements.Add(NewSnakeElem);
-		if (ElemIndex == 0) NewSnakeElem -> SetFirstElementType();
+		if (ElemIndex == 0) {
+			NewSnakeElem->SetFirstElementType();
+		}
 	}
 }
 
@@ -59,6 +64,8 @@ void ASnakeActor::Move()
 		break;
 	}
 
+	SnakeElements[0]->ToggleCollision();
+
 	for (int i = SnakeElements.Num() - 1; i > 0; i--) {
 		auto CurrentElement = SnakeElements[i];
 		auto PrevElement = SnakeElements[i - 1];
@@ -66,5 +73,19 @@ void ASnakeActor::Move()
 		CurrentElement->SetActorLocation(PrevLocation);
 	}
 	SnakeElements[0]->AddActorWorldOffset(MovementVector);
+	SnakeElements[0]->ToggleCollision();
+}
+
+void ASnakeActor::SnakeElementOverlap(ASnakeElementBase* OverlappedElement, AActor* Other)
+{
+	if (IsValid(OverlappedElement)) {
+		int32 ElemIndex;
+		SnakeElements.Find(OverlappedElement, ElemIndex);
+		bool BeIsFirst = ElemIndex == 0;
+		IInteractable* InteractableInterface = Cast<IInteractable>(Other);
+		if (InteractableInterface) {
+			InteractableInterface->Interact(this, BeIsFirst);
+		}
+	}
 }
 
