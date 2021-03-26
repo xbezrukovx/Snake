@@ -32,10 +32,15 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		float MovementSpeed;
 	UPROPERTY()
+		float NewSpeed;
+	UPROPERTY()
 		TArray<ASnakeElementBase*> SnakeElements;
 	UPROPERTY()
 		EMovementDirection LastMoveDirection;
-
+	UPROPERTY()
+		FVector SnakeLocation;
+	UPROPERTY()
+		bool isSpawn;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -47,6 +52,8 @@ public:
 	void AddSnakeElement(int ElementsNum = 1);
 
 	void Move();
+
+	void AddSpeed();
 
 	UFUNCTION()
 		void SnakeElementOverlap(ASnakeElementBase* OverlappedElement, AActor* Other);

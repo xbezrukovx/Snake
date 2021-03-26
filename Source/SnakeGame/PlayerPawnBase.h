@@ -8,6 +8,7 @@
 
 class UCameraComponent;
 class ASnakeActor;
+class AFood;
 
 UCLASS()
 class SNAKEGAME_API APlayerPawnBase : public APawn
@@ -18,12 +19,16 @@ public:
 	// Sets default values for this pawn's properties
 	APlayerPawnBase();
 
-	UPROPERTY(BluePrintReadWrite);
+	UPROPERTY(BluePrintReadWrite)
 	UCameraComponent* PawnCamera;
-	UPROPERTY(BluePrintReadWrite);
+	UPROPERTY(BluePrintReadWrite)
 	ASnakeActor* SnakeActor;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<ASnakeActor> SnakeActorClass;
+	UPROPERTY(BluePrintReadWrite)
+	AFood* Food;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AFood> FoodClass;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -36,6 +41,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void CreateSnakeActor();
+	void CreateFirstFood();
 	
 	UFUNCTION()
 		void HandlePlayerVerticalInput(float value);

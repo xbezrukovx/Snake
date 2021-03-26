@@ -30,7 +30,20 @@ void AFood::Interact(AActor* Interactor, bool BeIsHead)
 {
 	if (BeIsHead) {
 		auto Snake = Cast<ASnakeActor>(Interactor);
-		if (IsValid(Snake)) Snake->AddSnakeElement();
+		if (IsValid(Snake)) {
+			Snake->AddSnakeElement();
+			Snake->AddSpeed();
+			Destroy();
+			CreateNewFood();
+		}
 	}
+}
+
+void AFood::CreateNewFood() {
+	NewLocation.X = rand() % 960 - 480;
+	NewLocation.Y = rand() % 960 - 480;
+	NewLocation.Z = 10;
+	FTransform NewTransform(NewLocation);
+	GetWorld()->SpawnActor<AFood>(FoodClass, NewTransform);
 }
 

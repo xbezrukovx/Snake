@@ -4,6 +4,7 @@
 #include "PlayerPawnBase.h"
 #include "Engine/Classes/Camera/CameraComponent.h"
 #include "SnakeActor.h"
+#include "Food.h"
 #include "Components/InputComponent.h"
 // Sets default values
 APlayerPawnBase::APlayerPawnBase()
@@ -13,7 +14,8 @@ APlayerPawnBase::APlayerPawnBase()
 
 	PawnCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PawnCamera"));
 	RootComponent = PawnCamera;
-
+	PawnCamera->ProjectionMode = ECameraProjectionMode::Orthographic;
+	PawnCamera->SetOrthoWidth(1980);
 }
 
 // Called when the game starts or when spawned
@@ -22,6 +24,7 @@ void APlayerPawnBase::BeginPlay()
 	Super::BeginPlay();
 	SetActorRotation(FRotator(-90, 0, 0));
 	CreateSnakeActor();
+	CreateFirstFood();
 }
 
 // Called every frame
@@ -43,6 +46,10 @@ void APlayerPawnBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void APlayerPawnBase::CreateSnakeActor() {
 	SnakeActor = GetWorld()->SpawnActor<ASnakeActor>(SnakeActorClass, FTransform());
+}
+
+void APlayerPawnBase::CreateFirstFood() {
+	Food = GetWorld()->SpawnActor<AFood>(FoodClass,FTransform());
 }
 
 void APlayerPawnBase::HandlePlayerVerticalInput(float value){
