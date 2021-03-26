@@ -31,19 +31,20 @@ void AFood::Interact(AActor* Interactor, bool BeIsHead)
 	if (BeIsHead) {
 		auto Snake = Cast<ASnakeActor>(Interactor);
 		if (IsValid(Snake)) {
+			CreateNewFood(1);
 			Snake->AddSnakeElement();
 			Snake->AddSpeed();
 			Destroy();
-			CreateNewFood();
 		}
 	}
 }
 
-void AFood::CreateNewFood() {
-	NewLocation.X = rand() % 960 - 480;
-	NewLocation.Y = rand() % 960 - 480;
-	NewLocation.Z = 10;
-	FTransform NewTransform(NewLocation);
-	GetWorld()->SpawnActor<AFood>(FoodClass, NewTransform);
+void AFood::CreateNewFood(int countFood) {
+	for (int i = 0; i < countFood; i++) {
+		NewLocation.X = rand() % 960 - 480;
+		NewLocation.Y = rand() % 960 - 480;
+		NewLocation.Z = 10;
+		FTransform NewTransform(NewLocation);
+		GetWorld()->SpawnActor<AFood>(FoodClass, NewTransform);
+	}
 }
-

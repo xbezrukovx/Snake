@@ -45,7 +45,7 @@ void ASnakeActor::AddSnakeElement(int ElementsNum){
 			}
 		}
 		else{ 
-			FVector NewLocation(SnakeElements.Num() * ElementSize, 0, -90);
+			FVector NewLocation(SnakeElements.Num() * ElementSize, 0, -190);
 			FTransform NewTransform(NewLocation);
 			ASnakeElementBase* NewSnakeElem = GetWorld()->SpawnActor<ASnakeElementBase>(SnakeElementClass, NewTransform);
 			NewSnakeElem->SnakeOwner = this;
@@ -87,7 +87,6 @@ void ASnakeActor::Move()
 	}
 
 	SnakeLocation = SnakeElements[0]->GetActorLocation();
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(SnakeLocation.X));
 
 	if (SnakeLocation.X > 480 || SnakeLocation.X < -480) {
 		SnakeLocation.X *= -1;
@@ -104,7 +103,7 @@ void ASnakeActor::Move()
 
 void ASnakeActor::AddSpeed()
 {
-	if(NewSpeed > 0.125) NewSpeed = NewSpeed - 0.010;
+	if(NewSpeed > 0.125) NewSpeed = NewSpeed - 0.05;
 	SetActorTickInterval(NewSpeed);
 }
 
